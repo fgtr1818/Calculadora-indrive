@@ -84,19 +84,29 @@ text-transform: uppercase;
 margin-bottom: 8px;
 }
 
-input[type=“number”] {
+.input-fake {
 width: 100%;
-background: #ffffff;
-border: 1px solid var(–border);
+background: #181818 !important;
+border: 1px solid #1e1e1e;
 border-radius: 10px;
 padding: 14px 16px;
-color: #000000 !important;
--webkit-text-fill-color: #000000 !important;
+color: #f0f0f0 !important;
+-webkit-text-fill-color: #f0f0f0 !important;
 font-family: ‘Space Mono’, monospace;
 font-size: 1.1rem;
 outline: none;
-transition: border-color 0.2s;
--webkit-appearance: none;
+min-height: 50px;
+cursor: text;
+}
+
+.input-fake:empty::before {
+content: attr(data-placeholder);
+color: #555 !important;
+-webkit-text-fill-color: #555 !important;
+}
+
+.input-fake:focus {
+border-color: #00e676;
 }
 
 input[type=“number”]:focus {
@@ -140,7 +150,8 @@ overflow: visible;
 
 .calc-btn {
 width: 100%;
-background: var(–indrive);
+background: #00e676 !important;
+background-color: #00e676 !important;
 color: #000000 !important;
 -webkit-text-fill-color: #000000 !important;
 border: none;
@@ -266,17 +277,17 @@ font-size: 0.8rem;
 
   <div class="field">
     <label>Distancia (km)</label>
-    <input type="number" id="km" placeholder="Ej: 17.5" min="0" step="0.1">
+    <div class="input-fake" id="km" contenteditable="true" inputmode="decimal" data-placeholder="Ej: 17.5"></div>
   </div>
 
   <div class="field">
     <label>Tarifa ofrecida (CLP$)</label>
-    <input type="number" id="tarifa" placeholder="Ej: 5050" min="0" step="50">
+    <div class="input-fake" id="tarifa" contenteditable="true" inputmode="numeric" data-placeholder="Ej: 5050"></div>
   </div>
 
   <div class="field">
     <label>Duración estimada (min)</label>
-    <input type="number" id="duracion" placeholder="Ej: 18" min="0" step="1">
+    <div class="input-fake" id="duracion" contenteditable="true" inputmode="numeric" data-placeholder="Ej: 18"></div>
   </div>
 </div>
 
@@ -363,9 +374,9 @@ font-size: 0.8rem;
   }
 
   function calcular() {
-    const km = parseFloat(document.getElementById('km').value);
-    const tarifa = parseFloat(document.getElementById('tarifa').value);
-    const duracion = parseFloat(document.getElementById('duracion').value);
+    const km = parseFloat(document.getElementById('km').innerText);
+    const tarifa = parseFloat(document.getElementById('tarifa').innerText);
+    const duracion = parseFloat(document.getElementById('duracion').innerText);
 
     if (!km || !tarifa) {
       alert('Ingresá la distancia y la tarifa');
