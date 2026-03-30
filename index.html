@@ -25,7 +25,8 @@
 html, body {
 background: #0a0a0a !important;
 background-color: #0a0a0a !important;
-color: var(–text);
+color: #f0f0f0 !important;
+-webkit-text-fill-color: #f0f0f0;
 font-family: ‘Space Mono’, monospace;
 min-height: 100vh;
 padding: 20px 16px 40px;
@@ -281,16 +282,16 @@ font-size: 0.8rem;
   <div class="card-title">Bonificación InDrive</div>
   <div class="bono-grid">
     <button class="bono-btn active" data-bono="0" onclick="selectBono(this)">
-      <span></span>Sin bono
+      <span>$0</span>Sin bono
     </button>
     <button class="bono-btn" data-bono="2500" onclick="selectBono(this)">
-      <span>.500</span>5 km
+      <span>$2.500</span>5 km
     </button>
     <button class="bono-btn" data-bono="3000" onclick="selectBono(this)">
-      <span>.000</span>5 km
+      <span>$3.000</span>5 km
     </button>
     <button class="bono-btn" data-bono="5500" onclick="selectBono(this)">
-      <span>.500</span>15 km
+      <span>$5.500</span>15 km
     </button>
     <button class="bono-btn" data-bono="490" onclick="selectBono(this)">
       <span>+490</span>Bonif. mes
@@ -339,7 +340,7 @@ font-size: 0.8rem;
       <span class="valor pos" id="dBono"></span>
     </div>
     <div class="desglose-row">
-      <span class="label">Bencina (8.6 km/L × .600)</span>
+      <span class="label">Bencina (8.6 km/L × $1.600)</span>
       <span class="valor neg" id="dBencina"></span>
     </div>
     <div class="desglose-row" style="border-top: 1px solid #333; padding-top:14px; margin-top:2px;">
@@ -360,7 +361,7 @@ font-size: 0.8rem;
     </div>
     <div class="hora-stat">
       <span class="h-label">Tu promedio marzo</span>
-      <span class="h-valor" style="color:var(--indrive)">/km</span>
+      <span class="h-valor" style="color:var(--indrive)">$481/km</span>
     </div>
   </div>
 
@@ -431,7 +432,7 @@ font-size: 0.8rem;
     document.getElementById('dComision').textContent = '-' + fmt(comision);
     document.getElementById('dIva').textContent = '-' + fmt(iva);
     document.getElementById('dNeto').textContent = fmt(neto);
-    document.getElementById('dBono').textContent = bono > 0 ? '+' + fmt(bono) : '';
+    document.getElementById('dBono').textContent = bono > 0 ? '+' + fmt(bono) : '$0';
     document.getElementById('dBencina').textContent = '-' + fmt(bencina);
 
     const dGan = document.getElementById('dGanancia');
@@ -452,11 +453,11 @@ font-size: 0.8rem;
     const tarifaRecom = Math.ceil(km * 550 / 100) * 100;
 
     if (tipo === 'malo') {
-      consejo = `<strong>Viaje no rentable.</strong> Para cubrir bencina y comisión necesitás cobrar mínimo <strong></strong>. Lo recomendado para  km sería <strong></strong>.`;
+      consejo = `<strong>Viaje no rentable.</strong> Para cubrir bencina y comisión necesitás cobrar mínimo <strong>${fmt(tarifaMinima)}</strong>. Lo recomendado para ${km} km sería <strong>${fmt(tarifaRecom)}</strong>.`;
     } else if (tipo === 'regular') {
-      consejo = `<strong>Viaje borderline.</strong> Cubrís costos pero el margen es bajo. Si tenés bonificación activa o el destino te deja en zona de alta demanda, puede valer la pena. Si no, intentá negociar a <strong></strong>.`;
+      consejo = `<strong>Viaje borderline.</strong> Cubrís costos pero el margen es bajo. Si tenés bonificación activa o el destino te deja en zona de alta demanda, puede valer la pena. Si no, intentá negociar a <strong>${fmt(tarifaRecom)}</strong>.`;
     } else {
-      consejo = `<strong>¡Buen viaje!</strong> Tu ganancia por km supera tu promedio de marzo (/km). Aceptá sin dudar. 🚗`;
+      consejo = `<strong>¡Buen viaje!</strong> Tu ganancia por km supera tu promedio de marzo ($481/km). Aceptá sin dudar. 🚗`;
     }
 
     document.getElementById('consejoBox').innerHTML = consejo;
