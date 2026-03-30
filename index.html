@@ -86,11 +86,12 @@ margin-bottom: 8px;
 
 input[type=“number”] {
 width: 100%;
-background: #181818;
+background: #ffffff;
 border: 1px solid var(–border);
 border-radius: 10px;
 padding: 14px 16px;
-color: var(–text);
+color: #000000 !important;
+-webkit-text-fill-color: #000000 !important;
 font-family: ‘Space Mono’, monospace;
 font-size: 1.1rem;
 outline: none;
@@ -140,7 +141,8 @@ overflow: visible;
 .calc-btn {
 width: 100%;
 background: var(–indrive);
-color: #000;
+color: #000000 !important;
+-webkit-text-fill-color: #000000 !important;
 border: none;
 border-radius: 12px;
 padding: 16px;
@@ -278,34 +280,6 @@ font-size: 0.8rem;
   </div>
 </div>
 
-<div class="card">
-  <div class="card-title">Bonificación InDrive</div>
-  <div class="bono-grid">
-    <button class="bono-btn active" data-bono="0" onclick="selectBono(this)">
-      <span>$0</span>Sin bono
-    </button>
-    <button class="bono-btn" data-bono="2500" onclick="selectBono(this)">
-      <span>$2.500</span>5 km
-    </button>
-    <button class="bono-btn" data-bono="3000" onclick="selectBono(this)">
-      <span>$3.000</span>5 km
-    </button>
-    <button class="bono-btn" data-bono="5500" onclick="selectBono(this)">
-      <span>$5.500</span>15 km
-    </button>
-    <button class="bono-btn" data-bono="490" onclick="selectBono(this)">
-      <span>+490</span>Bonif. mes
-    </button>
-    <button class="bono-btn" data-bono="custom" onclick="selectBono(this)">
-      <span>✎</span>Otro
-    </button>
-  </div>
-  <div id="customBonoField" style="display:none; margin-top:12px;">
-    <label>Monto bonificación (CLP$)</label>
-    <input type="number" id="customBono" placeholder="Ej: 4000" min="0" step="100">
-  </div>
-</div>
-
 <button class="calc-btn" onclick="calcular()">CALCULAR →</button>
 
 <div id="resultado">
@@ -398,9 +372,7 @@ font-size: 0.8rem;
       return;
     }
 
-    let bono = bonoSeleccionado === 'custom'
-      ? (parseFloat(document.getElementById('customBono').value) || 0)
-      : bonoSeleccionado;
+    let bono = 0;
 
     // Cálculos
     const comision = tarifa * 0.106;
