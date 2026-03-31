@@ -325,7 +325,7 @@ font-size: 0.8rem;
       <span class="valor pos" id="dBono"></span>
     </div>
     <div class="desglose-row">
-      <span class="label">Bencina (10 km/L × $1.600)</span>
+      <span class="label" id="dBencinaLabel">Bencina (10 km/L × $1.600)</span>
       <span class="valor neg" id="dBencina"></span>
     </div>
     <div class="desglose-row" style="border-top: 1px solid #333; padding-top:14px; margin-top:2px;">
@@ -417,6 +417,10 @@ font-size: 0.8rem;
     document.getElementById('dNeto').textContent = fmt(neto);
     document.getElementById('dBono').textContent = bono > 0 ? '+' + fmt(bono) : '$0';
     document.getElementById('dBencina').textContent = '-' + fmt(bencina);
+    
+    // Actualizar etiqueta de bencina dinámicamente
+    const litros = (km / 10).toFixed(1);
+    document.getElementById('dBencinaLabel').textContent = `Bencina (${km} km ÷ 10 km/L = ${litros} L × $1.600)`;
 
     const dGan = document.getElementById('dGanancia');
     dGan.textContent = fmt(ganancia);
