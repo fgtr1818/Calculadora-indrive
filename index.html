@@ -325,7 +325,7 @@ font-size: 0.8rem;
       <span class="valor pos" id="dBono"></span>
     </div>
     <div class="desglose-row">
-      <span class="label">Bencina (8.6 km/L × $1.600)</span>
+      <span class="label">Bencina (10 km/L × $1.600)</span>
       <span class="valor neg" id="dBencina"></span>
     </div>
     <div class="desglose-row" style="border-top: 1px solid #333; padding-top:14px; margin-top:2px;">
@@ -389,7 +389,7 @@ font-size: 0.8rem;
     const comision = tarifa * 0.106;
     const iva = comision * 0.19;
     const neto = tarifa - comision - iva;
-    const bencina = (km / 8.6) * 1600;
+    const bencina = (km / 10) * 1600;
     const ganancia = neto + bono - bencina;
     const porKm = ganancia / km;
     const porHora = duracion > 0 ? (ganancia / duracion) * 60 : null;
