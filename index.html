@@ -1,1 +1,551 @@
+<!DOCTYPE html>
 
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora InDrive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+–bg: #0a0a0a;
+–card: #111111;
+–card-result: #161616;
+–border: #1e1e1e;
+–green: #00e676;
+–yellow: #ffd600;
+–red: #ff1744;
+–blue: #2979ff;
+–text: #f0f0f0;
+–muted: #666;
+–indrive: #00e676;
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+background: #0a0a0a !important;
+background-color: #0a0a0a !important;
+color: #f0f0f0 !important;
+font-family: ‘Space Mono’, monospace;
+min-height: 100vh;
+padding: 20px 16px 40px;
+}
+
+/* Utility color classes (Safari fix) */
+.color-verde  { color: #00e676 !important; }
+.color-rojo   { color: #ff1744 !important; }
+.color-azul   { color: #2979ff !important; }
+.color-amarillo { color: #ffd600 !important; }
+.color-muted  { color: #666    !important; }
+.color-blanco { color: #f0f0f0 !important; }
+
+header {
+text-align: center;
+margin-bottom: 28px;
+padding-top: 12px;
+}
+header h1 {
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 1.8rem;
+letter-spacing: -0.5px;
+line-height: 1.1;
+color: #f0f0f0;
+}
+header h1 span { color: var(–indrive); }
+header p {
+color: var(–muted);
+font-size: 0.72rem;
+margin-top: 6px;
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+/* INPUT CARD */
+.card-input {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 16px;
+}
+.card-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 0.7rem;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 16px;
+}
+.card-title-white {
+color: #f0f0f0 !important;
+-webkit-text-fill-color: #f0f0f0 !important;
+}
+.field { margin-bottom: 16px; }
+label {
+display: block;
+font-size: 0.7rem;
+color: var(–muted);
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+.input-fake {
+width: 100%;
+background: #181818 !important;
+border: 1px solid #1e1e1e;
+border-radius: 10px;
+padding: 14px 16px;
+color: #f0f0f0 !important;
+-webkit-text-fill-color: #f0f0f0 !important;
+font-family: ‘Space Mono’, monospace;
+font-size: 1.1rem;
+outline: none;
+min-height: 50px;
+cursor: text;
+}
+.input-fake:empty::before {
+content: attr(data-placeholder);
+color: #555 !important;
+-webkit-text-fill-color: #555 !important;
+}
+.input-fake:focus { border-color: #00e676; }
+
+.calc-btn {
+width: 100%;
+background: #00e676 !important;
+background-color: #00e676 !important;
+color: #000000 !important;
+-webkit-text-fill-color: #000000 !important;
+border: none;
+border-radius: 12px;
+padding: 16px;
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 1rem;
+letter-spacing: 1px;
+cursor: pointer;
+transition: opacity 0.2s;
+margin-top: 4px;
+}
+.calc-btn:active { opacity: 0.8; }
+
+/* RESULTADO */
+#resultado {
+display: none;
+animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(8px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESUMEN (veredicto destacado) ── */
+.card-resumen {
+background: var(–card-result);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-top: 16px;
+margin-bottom: 12px;
+}
+.resumen-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 0.7rem;
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 16px;
+}
+.resumen-row {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+padding: 10px 0;
+border-bottom: 1px solid #1e1e1e;
+font-size: 0.85rem;
+}
+.resumen-row:last-of-type { border-bottom: none; }
+.resumen-row .r-label { color: var(–muted); padding-top: 2px; }
+.resumen-row .r-valor { font-weight: 700; text-align: right; }
+.resumen-row .r-sub   { font-size: 0.65rem; color: #444; margin-top: 3px; text-align: right; font-family: ‘Space Mono’, monospace; }
+
+.ganancia-real-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 14px;
+padding-top: 14px;
+border-top: 1px solid #2a2a2a;
+}
+.ganancia-real-label {
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 1rem;
+color: var(–indrive);
+}
+.ganancia-real-valor {
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 2rem;
+color: var(–yellow);
+}
+
+/* ── DESGLOSE ── */
+.card-desglose {
+background: var(–card-result);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 12px;
+}
+.desglose-row {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+padding: 11px 0;
+border-bottom: 1px solid #1e1e1e;
+font-size: 0.82rem;
+}
+.desglose-row:last-child { border-bottom: none; }
+.desglose-row .d-label { color: var(–muted); }
+.desglose-row .d-sub   { font-size: 0.62rem; color: #444; margin-top: 3px; font-family: ‘Space Mono’, monospace; }
+.desglose-row .d-valor { font-weight: 700; text-align: right; }
+
+/* ── EFICIENCIA ── */
+.card-eficiencia {
+background: var(–card-result);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 12px;
+}
+.efic-item {
+background: #1e1e1e;
+border-radius: 10px;
+padding: 12px 16px;
+margin-bottom: 8px;
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+font-size: 0.82rem;
+}
+.efic-item:last-child { margin-bottom: 0; }
+.efic-label { color: #888; }
+.efic-sub   { font-size: 0.62rem; color: #444; margin-top: 3px; font-family: ‘Space Mono’, monospace; }
+.efic-valor { font-family: ‘Syne’, sans-serif; font-weight: 700; font-size: 0.95rem; text-align: right; }
+
+/* ── CONSEJO ── */
+.card-consejo {
+background: #141414;
+border-left: 3px solid var(–indrive);
+border-radius: 0 12px 12px 0;
+padding: 16px;
+font-size: 0.78rem;
+line-height: 1.7;
+color: #aaa;
+margin-bottom: 12px;
+}
+.card-consejo strong { color: var(–indrive); }
+.card-consejo .consejo-tarifa { color: var(–indrive); font-weight: 700; }
+
+/* veredicto badge */
+.veredicto-badge {
+display: inline-block;
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 0.8rem;
+letter-spacing: 1.5px;
+padding: 4px 12px;
+border-radius: 6px;
+margin-bottom: 12px;
+}
+.badge-bueno   { background: rgba(0,230,118,0.12); color: #00e676; border: 1px solid rgba(0,230,118,0.3); }
+.badge-regular { background: rgba(255,214,0,0.10); color: #ffd600; border: 1px solid rgba(255,214,0,0.3); }
+.badge-malo    { background: rgba(255,23,68,0.10);  color: #ff1744; border: 1px solid rgba(255,23,68,0.3); }
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>Calculadora <span>InDrive</span></h1>
+  <p>¿Conviene aceptar el viaje?</p>
+</header>
+
+<div class="card-input">
+  <div class="card-title">Datos del viaje</div>
+
+  <div class="field">
+    <label>Distancia (km)</label>
+    <div class="input-fake" id="km" contenteditable="true" inputmode="decimal" data-placeholder=""></div>
+  </div>
+
+  <div class="field">
+    <label>Tarifa ofrecida (CLP$)</label>
+    <div class="input-fake" id="tarifa" contenteditable="true" inputmode="numeric" data-placeholder=""></div>
+  </div>
+
+  <div class="field">
+    <label>Duración estimada (min)</label>
+    <div class="input-fake" id="duracion" contenteditable="true" inputmode="numeric" data-placeholder=""></div>
+  </div>
+</div>
+
+<button class="calc-btn" onclick="calcular()">CALCULAR →</button>
+
+<!-- RESULTADO -->
+
+<div id="resultado">
+
+  <!-- RESUMEN -->
+
+  <div class="card-resumen">
+    <div class="resumen-title card-title-white">Resumen</div>
+
+```
+<div class="resumen-row">
+  <span class="r-label">Tarifa cobrada</span>
+  <div>
+    <div class="r-valor color-azul" id="rTarifa"></div>
+  </div>
+</div>
+
+<div class="resumen-row">
+  <span class="r-label">Costo total</span>
+  <div>
+    <div class="r-valor color-rojo" id="rCostoTotal"></div>
+    <div class="r-sub" id="rCostoSub"></div>
+  </div>
+</div>
+
+<div class="ganancia-real-row">
+  <span class="ganancia-real-label">GANANCIA REAL</span>
+  <span class="ganancia-real-valor" id="rGanancia"></span>
+</div>
+```
+
+  </div>
+
+  <!-- DESGLOSE -->
+
+  <div class="card-desglose">
+    <div class="card-title card-title-white">Desglose</div>
+
+```
+<div class="desglose-row">
+  <span class="d-label">Tarifa cobrada</span>
+  <span class="d-valor color-azul" id="dTarifa"></span>
+</div>
+<div class="desglose-row">
+  <span class="d-label">Comisión InDrive (10.6%)</span>
+  <span class="d-valor color-rojo" id="dComision"></span>
+</div>
+<div class="desglose-row">
+  <span class="d-label">IVA comisión</span>
+  <span class="d-valor color-rojo" id="dIva"></span>
+</div>
+<div class="desglose-row">
+  <span class="d-label">Total descuento InDrive</span>
+  <span class="d-valor color-rojo" id="dTotalDesc"></span>
+</div>
+<div class="desglose-row">
+  <span class="d-label">Ingreso neto InDrive</span>
+  <span class="d-valor color-verde" id="dNeto"></span>
+</div>
+<div class="desglose-row">
+  <span class="d-label">Bonificación</span>
+  <span class="d-valor color-verde" id="dBono"></span>
+</div>
+<div class="desglose-row">
+  <div>
+    <div class="d-label">Bencina</div>
+    <div class="d-sub" id="dBencinaLabel"></div>
+  </div>
+  <span class="d-valor color-rojo" id="dBencina"></span>
+</div>
+<div class="desglose-row" style="border-top: 1px solid #2a2a2a; margin-top:4px; padding-top:14px;">
+  <div>
+    <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; color:#f0f0f0;">Costo total</div>
+    <div class="d-sub" id="dCostoTotalSub"></div>
+  </div>
+  <span class="d-valor color-rojo" id="dCostoTotal2"></span>
+</div>
+```
+
+  </div>
+
+  <!-- EFICIENCIA -->
+
+  <div class="card-eficiencia">
+    <div class="card-title card-title-white">Eficiencia</div>
+
+```
+<div class="efic-item">
+  <div>
+    <div class="efic-label">CLP$/km neto</div>
+    <div class="efic-sub" id="eKmSub"></div>
+  </div>
+  <div class="efic-valor" id="ePorKm"></div>
+</div>
+
+<div class="efic-item" id="eHoraRow" style="display:none;">
+  <div>
+    <div class="efic-label">CLP$/hora</div>
+    <div class="efic-sub" id="eHoraSub"></div>
+  </div>
+  <div class="efic-valor" id="ePorHora"></div>
+</div>
+
+<div class="efic-item">
+  <div>
+    <div class="efic-label">Costo bencina/km</div>
+    <div class="efic-sub" id="eBencKmSub"></div>
+  </div>
+  <div class="efic-valor color-rojo" id="eBencKm"></div>
+</div>
+
+<div class="efic-item">
+  <div>
+    <div class="efic-label">Costo total/km</div>
+    <div class="efic-sub" id="eCostoKmSub"></div>
+  </div>
+  <div class="efic-valor color-rojo" id="eCostoKm"></div>
+</div>
+```
+
+  </div>
+
+  <!-- CONSEJO -->
+
+  <div class="card-consejo" id="consejoBox" style="display:none;"></div>
+
+</div>
+
+<script>
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('es-CL');
+  }
+
+  function tarifaRecomendada(km) {
+    let precioPorKm;
+    if      (km <= 5)  precioPorKm = 600;
+    else if (km <= 10) precioPorKm = 500;
+    else if (km <= 20) precioPorKm = 420;
+    else if (km <= 35) precioPorKm = 370;
+    else               precioPorKm = 340;
+    return Math.ceil(km * precioPorKm / 100) * 100;
+  }
+
+  function calcular() {
+    const km      = parseFloat(document.getElementById('km').innerText);
+    const tarifa  = parseFloat(document.getElementById('tarifa').innerText);
+    const durMin  = parseFloat(document.getElementById('duracion').innerText);
+
+    if (!km || !tarifa) {
+      alert('Ingresá la distancia y la tarifa');
+      return;
+    }
+
+    const KM_L    = 12;
+    const PRECIO_L = 1600;
+
+    const comision   = tarifa * 0.106;
+    const iva        = comision * 0.19;
+    const totalDesc  = comision + iva;
+    const neto       = tarifa - totalDesc;
+    const bono       = 0;
+    const litros     = km / KM_L;
+    const bencina    = litros * PRECIO_L;
+    const costoTotal = bencina + totalDesc;
+    const ganancia   = tarifa - costoTotal;
+    const porKm      = ganancia / km;
+    const bencKm     = bencina / km;
+    const costoKm    = costoTotal / km;
+    const porHora    = (durMin > 0) ? (ganancia / durMin) * 60 : null;
+
+    // Veredicto
+    let tipo;
+    if      (porKm >= 400) tipo = 'bueno';
+    else if (porKm >= 200) tipo = 'regular';
+    else                   tipo = 'malo';
+
+    const colorGanancia = tipo === 'bueno' ? 'color-verde' : tipo === 'regular' ? 'color-amarillo' : 'color-rojo';
+
+    // ── RESUMEN ──
+    document.getElementById('rTarifa').textContent    = fmt(tarifa);
+    document.getElementById('rCostoTotal').textContent = '-' + fmt(costoTotal);
+    document.getElementById('rCostoSub').textContent   = `(${fmt(bencina)} benc + ${fmt(totalDesc)} indrv)`;
+
+    const rGan = document.getElementById('rGanancia');
+    rGan.textContent = fmt(ganancia);
+    rGan.className   = 'ganancia-real-valor ' + colorGanancia;
+
+    // ── DESGLOSE ──
+    document.getElementById('dTarifa').textContent    = fmt(tarifa);
+    document.getElementById('dComision').textContent  = '-' + fmt(comision);
+    document.getElementById('dIva').textContent       = '-' + fmt(iva);
+    document.getElementById('dTotalDesc').textContent = '-' + fmt(totalDesc);
+    document.getElementById('dNeto').textContent      = fmt(neto);
+    document.getElementById('dBono').textContent      = bono > 0 ? '+' + fmt(bono) : '$0';
+    document.getElementById('dBencina').textContent   = '-' + fmt(bencina);
+
+    const litrosStr = litros.toFixed(1);
+    document.getElementById('dBencinaLabel').textContent =
+      `${km} km ÷ ${KM_L} km/L = ${litrosStr} L × $${PRECIO_L.toLocaleString('es-CL')}`;
+
+    document.getElementById('dCostoTotal2').textContent  = '-' + fmt(costoTotal);
+    document.getElementById('dCostoTotalSub').textContent = `(${fmt(bencina)} benc + ${fmt(totalDesc)} indrv)`;
+
+    // ── EFICIENCIA ──
+    const eKm = document.getElementById('ePorKm');
+    eKm.textContent = fmt(porKm) + '/km';
+    eKm.className   = 'efic-valor ' + colorGanancia;
+    document.getElementById('eKmSub').textContent = `(${fmt(ganancia)} ÷ ${km} km)`;
+
+    if (porHora !== null) {
+      document.getElementById('eHoraRow').style.display = 'flex';
+      const eHora = document.getElementById('ePorHora');
+      eHora.textContent = fmt(porHora) + '/hr';
+      eHora.className   = 'efic-valor ' + colorGanancia;
+      document.getElementById('eHoraSub').textContent = `(${fmt(ganancia)} ÷ ${durMin} min × 60)`;
+    }
+
+    document.getElementById('eBencKm').textContent  = fmt(bencKm) + '/km';
+    document.getElementById('eBencKmSub').textContent = `(${fmt(bencina)} ÷ ${km} km)`;
+
+    document.getElementById('eCostoKm').textContent  = fmt(costoKm) + '/km';
+    document.getElementById('eCostoKmSub').textContent =
+      `(${fmt(bencina)} + ${fmt(totalDesc)} = ${fmt(costoTotal)} ÷ ${km} km)`;
+
+    // ── CONSEJO ──
+    const tarifaRec = tarifaRecomendada(km);
+    const consejoBox = document.getElementById('consejoBox');
+
+    if (tarifa < tarifaRec) {
+      let msg = '';
+      if (tipo === 'malo') {
+        msg = `<strong>Viaje no rentable.</strong> Cubrís costos pero sin margen. Si podés, negociá a <span class="consejo-tarifa">${fmt(tarifaRec)}</span>.`;
+      } else if (tipo === 'regular') {
+        msg = `<strong>Viaje borderline.</strong> Cubrís costos pero el margen es bajo. Si tenés bonificación activa o el destino te deja en zona de alta demanda, puede valer la pena. Si podés, intentá negociar a <span class="consejo-tarifa">${fmt(tarifaRec)}</span>.`;
+      }
+      if (msg) {
+        consejoBox.innerHTML = msg;
+        consejoBox.style.display = 'block';
+      } else {
+        consejoBox.style.display = 'none';
+      }
+    } else {
+      consejoBox.style.display = 'none';
+    }
+
+    // Mostrar resultado
+    const res = document.getElementById('resultado');
+    res.style.display = 'block';
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+</body>
+</html>
