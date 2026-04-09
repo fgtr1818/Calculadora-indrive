@@ -288,6 +288,11 @@ margin-bottom: 12px;
   </div>
 
   <div class="field">
+    <label>Precio bencina (CLP$/L)</label>
+    <div class="input-fake" id="precioBencina" contenteditable="true" inputmode="numeric" data-placeholder="">1600</div>
+  </div>
+
+  <div class="field">
     <label>Duración estimada (min)</label>
     <div class="input-fake" id="duracion" contenteditable="true" inputmode="numeric" data-placeholder=""></div>
   </div>
@@ -448,8 +453,8 @@ margin-bottom: 12px;
       return;
     }
 
-    const KM_L    = 12;
-    const PRECIO_L = 1600;
+    const KM_L     = 12;
+    const PRECIO_L = parseFloat(document.getElementById('precioBencina').innerText) || 1600;
 
     const comision   = tarifa * 0.106;
     const iva        = comision * 0.19;
